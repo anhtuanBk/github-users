@@ -1,11 +1,17 @@
 package co.touchlab.kampkit
 
-import co.touchlab.kampkit.ktor.DogApi
-import co.touchlab.kampkit.ktor.DogApiImpl
-import co.touchlab.kampkit.models.BreedRepository
+import co.touchlab.kampkit.data.UserRepositoryImpl
+import co.touchlab.kampkit.data.remote.UserApi
+import co.touchlab.kampkit.data.remote.UserApiImpl
+import co.touchlab.kampkit.domain.repository.UserRepository
+import co.touchlab.kampkit.domain.usecase.GetUserDetailsUseCase
+import co.touchlab.kampkit.domain.usecase.GetUsersUseCase
+import co.touchlab.kampkit.network.createHttpClient
+import co.touchlab.kampkit.network.createJson
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.StaticConfig
 import co.touchlab.kermit.platformLogWriter
+import io.ktor.http.Url
 import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.Clock
 import org.koin.core.KoinApplication
@@ -13,6 +19,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.singleOf
 import org.koin.core.parameter.parametersOf
 import org.koin.core.scope.Scope
 import org.koin.dsl.module
@@ -48,9 +55,10 @@ private val coreModule = module {
             Dispatchers.Default
         )
     }
-    single<DogApi> {
-        DogApiImpl(
-            getWith("DogApiImpl"),
+    single<UserApi> {
+        UserApiImpl(
+            Url("https://api.github.com/"),
+            getWith("UserApi"),
             get()
         )
     }
@@ -66,12 +74,33 @@ private val coreModule = module {
         Logger(config = StaticConfig(logWriterList = listOf(platformLogWriter())), "KampKit")
     factory { (tag: String?) -> if (tag != null) baseLogger.withTag(tag) else baseLogger }
 
+    singleOf(::createJson)
+
     single {
-        BreedRepository(
+        createHttpClient(
+            engine = get(),
+            json = get(),
+            log = getWith("http client")
+        )
+    }
+
+    single<UserRepository> {
+        UserRepositoryImpl(
             get(),
             get(),
-            get(),
-            getWith("BreedRepository"),
+            Dispatchers.Default,
+            getWith("UserRepository"),
+        )
+    }
+
+    single {
+        GetUsersUseCase(
+            get()
+        )
+    }
+
+    single {
+        GetUserDetailsUseCase(
             get()
         )
     }

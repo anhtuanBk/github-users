@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -49,6 +50,12 @@ dependencies {
     implementation(libs.bundles.app.ui)
     implementation(libs.multiplatformSettings.common)
     implementation(libs.kotlinx.dateTime)
+    implementation(libs.kotlinx.serialization)
+    implementation(libs.coil.compose)
+    implementation(libs.androidx.material3.android)
+    implementation(libs.immutable.collection)
+    implementation(libs.flow.ext)
+    implementation(libs.androidx.navigation.compose)
     coreLibraryDesugaring(libs.android.desugaring)
     implementation(libs.koin.android)
     testImplementation(libs.junit)

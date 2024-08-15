@@ -1,22 +1,51 @@
 package co.touchlab.kampkit
 
+import co.touchlab.kampkit.db.User
+import co.touchlab.kampkit.db.UserDetails
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.StaticConfig
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class SqlDelightTest {
 
     private lateinit var dbHelper: DatabaseHelper
 
-    private suspend fun DatabaseHelper.insertBreed(name: String) {
-        insertBreeds(listOf(name))
+    private suspend fun DatabaseHelper.insertUsers(users: List<User>) {
+        insertUsers(users)
     }
+
+    private val page: Long = 1
+    private val login = "cdc"
+
+    private val mockUsers: List<User> = listOf(
+        User(
+            "aaa",
+            "mkdc.com",
+            "ikdkc.asa",
+            page
+        ),
+        User(
+            "dsdd",
+            "mksddc.com",
+            "ikwewdkc.asa",
+            page
+        )
+    )
+
+    private val mockUserDetails = UserDetails(
+        login,
+        "dmck.cjdnc",
+        "cjndjc.ncjdnc",
+        "jandc",
+        1212,
+        12313
+    )
 
     @BeforeTest
     fun setup() = runTest {
@@ -26,53 +55,35 @@ class SqlDelightTest {
             Dispatchers.Default
         )
         dbHelper.deleteAll()
-        dbHelper.insertBreed("Beagle")
+        dbHelper.insertUsers(mockUsers)
+        dbHelper.insertUserDetail(mockUserDetails)
     }
 
     @Test
-    fun `Select All Items Success`() = runTest {
-        val breeds = dbHelper.selectAllItems().first()
-        assertNotNull(
-            breeds.find { it.name == "Beagle" },
-            "Could not retrieve Breed"
+    fun `Select Users by page Success`() = runTest {
+        val users = dbHelper.selectUsersByPage(page.toInt()).first()
+        assertEquals(
+            users,
+            mockUsers
         )
     }
 
     @Test
-    fun `Select Item by Id Success`() = runTest {
-        val breeds = dbHelper.selectAllItems().first()
-        val firstBreed = breeds.first()
-        assertNotNull(
-            dbHelper.selectById(firstBreed.id),
-            "Could not retrieve Breed by Id"
-        )
-    }
-
-    @Test
-    fun `Update Favorite Success`() = runTest {
-        val breeds = dbHelper.selectAllItems().first()
-        val firstBreed = breeds.first()
-        dbHelper.updateFavorite(firstBreed.id, true)
-        val newBreed = dbHelper.selectById(firstBreed.id).first().first()
-        assertNotNull(
-            newBreed,
-            "Could not retrieve Breed by Id"
-        )
-        assertTrue(
-            newBreed.favorite,
-            "Favorite Did Not Save"
+    fun `Select UserDetails by login Success`() = runTest {
+        val userDetails = dbHelper.selectUserDetailsByLogin(login).first()
+        assertEquals(
+            userDetails,
+            mockUserDetails
         )
     }
 
     @Test
     fun `Delete All Success`() = runTest {
-        dbHelper.insertBreed("Poodle")
-        dbHelper.insertBreed("Schnauzer")
-        assertTrue(dbHelper.selectAllItems().first().isNotEmpty())
+        assertTrue(dbHelper.selectUsersByPage(page.toInt()).first().isNotEmpty())
         dbHelper.deleteAll()
 
         assertTrue(
-            dbHelper.selectAllItems().first().count() == 0,
+            dbHelper.selectUsersByPage(page.toInt()).first().isEmpty(),
             "Delete All did not work"
         )
     }

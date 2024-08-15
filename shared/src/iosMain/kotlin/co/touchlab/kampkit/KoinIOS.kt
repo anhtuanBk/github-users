@@ -3,11 +3,13 @@ package co.touchlab.kampkit
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import co.touchlab.kampkit.db.KaMPKitDb
-import co.touchlab.kampkit.models.BreedViewModel
+import co.touchlab.kampkit.presentation.UserDetailsViewModel
+import co.touchlab.kampkit.presentation.UsersViewModel
 import co.touchlab.kermit.Logger
 import com.russhwolf.settings.NSUserDefaultsSettings
 import com.russhwolf.settings.Settings
 import io.ktor.client.engine.darwin.Darwin
+import kotlinx.coroutines.Dispatchers
 import org.koin.core.Koin
 import org.koin.core.KoinApplication
 import org.koin.core.component.KoinComponent
@@ -32,7 +34,20 @@ actual val platformModule = module {
 
     single { Darwin.create() }
 
-    single { BreedViewModel(get(), getWith("BreedViewModel")) }
+    single {
+        UsersViewModel(
+            get(),
+            getWith("UsersViewModel"),
+            Dispatchers.Default
+    ) }
+
+    single {
+        UserDetailsViewModel(
+            get(),
+            getWith("UserDetailsViewModel"),
+            Dispatchers.Default
+        )
+    }
 }
 
 // Access from Swift to create a logger
@@ -41,5 +56,6 @@ fun Koin.loggerWithTag(tag: String) = get<Logger>(qualifier = null) { parameters
 
 @Suppress("unused") // Called from Swift
 object KotlinDependencies : KoinComponent {
-    fun getBreedViewModel() = getKoin().get<BreedViewModel>()
+    fun getUsersViewModel() = getKoin().get<UsersViewModel>()
+    fun getUserDetailsViewModel() = getKoin().get<UserDetailsViewModel>()
 }

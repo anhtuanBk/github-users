@@ -1,26 +1,46 @@
-import kotlin.Boolean;
+-- UserDetails.sq
 
-CREATE TABLE Breed (
-id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-name TEXT NOT NULL UNIQUE,
-favorite INTEGER AS Boolean NOT NULL DEFAULT 0
+CREATE TABLE User (
+    login TEXT NOT NULL PRIMARY KEY,
+    avatarUrl TEXT NOT NULL,
+    htmlUrl TEXT NOT NULL,
+    page INTEGER NOT NULL
 );
 
-selectAll:
-SELECT * FROM Breed;
+CREATE TABLE UserDetails (
+    login TEXT NOT NULL PRIMARY KEY,
+    avatarUrl TEXT NOT NULL,
+    htmlUrl TEXT NOT NULL,
+    location TEXT,
+    followers INTEGER NOT NULL,
+    following INTEGER NOT NULL,
+    FOREIGN KEY(login) REFERENCES User(login) ON DELETE CASCADE
+);
 
-selectById:
-SELECT * FROM Breed WHERE id = ?;
+-- Queries for User table
+insertUser:
+REPLACE INTO User(login, avatarUrl, htmlUrl, page)
+VALUES (?, ?, ?, ?);
 
-selectByName:
-SELECT * FROM Breed WHERE name = ?;
+selectAllUsers:
+SELECT * FROM User;
 
-insertBreed:
-INSERT OR IGNORE INTO Breed(name)
-VALUES (?);
+selectUsersByPage:
+SELECT * FROM User WHERE page = ?;
 
-deleteAll:
-DELETE FROM Breed;
+selectUserByLogin:
+SELECT * FROM User WHERE login = ?;
 
-updateFavorite:
-UPDATE Breed SET favorite = ? WHERE id = ?;
+deleteAllUsers:
+DELETE FROM User;
+
+-- Queries for UserDetails table
+insertUserDetails:
+REPLACE INTO UserDetails(login, avatarUrl, htmlUrl, location, followers, following)
+VALUES (?, ?, ?, ?, ?, ?);
+
+selectUserDetailsByLogin:
+SELECT * FROM UserDetails WHERE login = ?;
+
+deleteAllUserDetails:
+DELETE FROM UserDetails;
