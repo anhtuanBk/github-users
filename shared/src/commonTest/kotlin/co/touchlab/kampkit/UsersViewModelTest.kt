@@ -112,14 +112,12 @@ class UsersViewModelTest {
 
         viewModel.fetchUsers()
         viewModel.users.test {
-            // assertEquals(
-            //     mockUsers,
-            //     awaitItemPrecededBy(emptyList())
-            // )
+            assertEquals(emptyList(), awaitItem())
             assertEquals(
                 nextItem,
-                awaitItemPrecededBy(emptyList())
+                awaitItemPrecededBy(mockUsers)
             )
+            cancelAndIgnoreRemainingEvents()
         }
     }
 

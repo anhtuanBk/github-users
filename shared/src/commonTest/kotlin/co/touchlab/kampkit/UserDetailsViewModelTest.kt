@@ -10,7 +10,9 @@ import co.touchlab.kampkit.mock.UserApiMock
 import co.touchlab.kampkit.presentation.UserDetailsViewModel
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.StaticConfig
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -36,6 +38,8 @@ class UserDetailsViewModelTest {
     private val viewModel by lazy {
         UserDetailsViewModel(getUserDetailsUseCase, kermit, Dispatchers.Default)
     }
+
+    private val scope = CoroutineScope(Dispatchers.Default)
 
     private val login = "cdc"
     private val mockDbUserDetails = UserDetails(
@@ -79,10 +83,11 @@ class UserDetailsViewModelTest {
     @Test
     fun `Fetch UserDetails with login`() = runTest {
         ktorApi.prepareGetUserDetailsResult(mockUserDetails)
-        viewModel.fetchUserDetails(login)
+        scope.launch {
+            viewModel.fetchUserDetails(login)
+        }
         viewModel.userDetails.test {
-            assertEquals(null, awaitItem())
-            assertEquals(mockUserDetails, awaitItem())
+            assertEquals(mockUserDetails, awaitItemPrecededBy(null))
         }
     }
 
@@ -90,10 +95,13 @@ class UserDetailsViewModelTest {
     fun `Fetch UserDetails with login cache first then remote`() = runTest {
         ktorApi.prepareGetUserDetailsResult(mockUserDetailsRemote)
         dbHelper.insertUserDetail(mockDbUserDetails)
-        viewModel.fetchUserDetails(login)
+        scope.launch {
+            viewModel.fetchUserDetails(login)
+        }
 
         viewModel.userDetails.test {
-            assertEquals(mockUserDetailsRemote, awaitItemPrecededBy(null))
+            assertEquals(mockUserDetails, awaitItemPrecededBy(null))
+            assertEquals(mockUserDetailsRemote, awaitItem())
         }
     }
 
@@ -101,7 +109,9 @@ class UserDetailsViewModelTest {
     fun `Fail silently on fetch UserDetails error and get cached item`() = runTest {
         ktorApi.throwGetUserDetailsOnCall(RuntimeException("Test error"))
         dbHelper.insertUserDetail(mockDbUserDetails)
-        viewModel.fetchUserDetails(login)
+        scope.launch {
+            viewModel.fetchUserDetails(login)
+        }
 
         viewModel.userDetails.test {
             assertEquals(mockUserDetails, awaitItemPrecededBy(null))

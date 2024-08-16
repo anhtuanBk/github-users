@@ -30,7 +30,6 @@ class UsersViewModel(
 
     fun fetchUsers() {
         if (_isLoading.value) return // Prevent multiple requests at once
-        // if (currentPage > 1 && users.value.isEmpty()) return
         _isLoading.value = true
        CoroutineScope(dispatcher).launch {
            getUsersUseCase.execute(currentPage)
