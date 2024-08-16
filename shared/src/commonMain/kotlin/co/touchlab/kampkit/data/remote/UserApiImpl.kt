@@ -13,27 +13,23 @@ import io.ktor.http.path
 class UserApiImpl(
     private val baseUrl: Url,
     private val log: Logger,
-    private val httpClient: HttpClient,
+    private val httpClient: HttpClient
 ) : UserApi {
-    override suspend fun getUsers(page: Int, perPage: Int): List<User> {
-        return httpClient.get(
-            URLBuilder(baseUrl)
-                .apply {
-                    path("users")
-                    parameters.append("page", page.toString())
-                    parameters.append("per_page", perPage.toString())
-                }
-                .build(),
-        ).body<List<User>>()
-    }
+    override suspend fun getUsers(page: Int, perPage: Int): List<User> = httpClient.get(
+        URLBuilder(baseUrl)
+            .apply {
+                path("users")
+                parameters.append("page", page.toString())
+                parameters.append("per_page", perPage.toString())
+            }
+            .build()
+    ).body<List<User>>()
 
-    override suspend fun getUserDetails(login: String): UserDetails {
-        return httpClient.get(
-            URLBuilder(baseUrl)
-                .apply {
-                    path("users/$login")
-                }
-                .build(),
-        ).body<UserDetails>()
-    }
+    override suspend fun getUserDetails(login: String): UserDetails = httpClient.get(
+        URLBuilder(baseUrl)
+            .apply {
+                path("users/$login")
+            }
+            .build()
+    ).body<UserDetails>()
 }

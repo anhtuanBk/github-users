@@ -20,10 +20,7 @@ import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UsersScreen(
-    usersViewModel: UsersViewModel,
-    onShowUserDetails: (String) -> Unit
-) {
+fun UsersScreen(usersViewModel: UsersViewModel, onShowUserDetails: (String) -> Unit) {
     val users by usersViewModel.users.collectAsStateWithLifecycle()
     val errorMessage by usersViewModel.errorMessage.collectAsStateWithLifecycle()
     val isLoading by usersViewModel.isLoading.collectAsStateWithLifecycle()
@@ -33,17 +30,17 @@ fun UsersScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(text = stringResource(id = R.string.app_name))
-                },
+                }
             )
-        },
+        }
     ) { innerPadding ->
         Box(
             modifier = Modifier
                 .padding(innerPadding)
-                .consumeWindowInsets(innerPadding),
+                .consumeWindowInsets(innerPadding)
         ) {
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 UsersList(
                     items = users.toImmutableList(),

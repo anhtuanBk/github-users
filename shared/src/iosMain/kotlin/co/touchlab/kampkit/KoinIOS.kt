@@ -39,7 +39,8 @@ actual val platformModule = module {
             get(),
             getWith("UsersViewModel"),
             Dispatchers.Default
-    ) }
+        )
+    }
 
     single {
         UserDetailsViewModel(

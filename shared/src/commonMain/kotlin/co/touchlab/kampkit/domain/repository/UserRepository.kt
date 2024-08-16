@@ -5,6 +5,6 @@ import co.touchlab.kampkit.domain.model.UserDetails
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
-  fun getUsers(page: Int): Flow<List<User>>
-  fun getUserDetails(login: String): Flow<UserDetails>
+    fun getUsers(page: Int): Flow<List<User>>
+    fun getUserDetails(login: String): Flow<UserDetails>
 }

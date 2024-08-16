@@ -5,5 +5,5 @@ import co.touchlab.kampkit.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 
 class GetUserDetailsUseCase(private val userRepository: UserRepository) {
-  fun execute(login: String): Flow<UserDetails> = userRepository.getUserDetails(login)
+    fun execute(login: String): Flow<UserDetails> = userRepository.getUserDetails(login)
 }

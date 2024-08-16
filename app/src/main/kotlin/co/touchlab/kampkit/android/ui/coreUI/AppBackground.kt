@@ -1,4 +1,4 @@
-package co.touchlab.kampkit.android.ui.core_ui
+package co.touchlab.kampkit.android.ui.coreUI
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.LocalAbsoluteTonalElevation
@@ -19,17 +19,17 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 fun AppBackground(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
-  val backgroundTheme = LocalBackgroundTheme.current
-  val color = backgroundTheme.color
-  val tonalElevation = backgroundTheme.tonalElevation
+    val backgroundTheme = LocalBackgroundTheme.current
+    val color = backgroundTheme.color
+    val tonalElevation = backgroundTheme.tonalElevation
 
-  Surface(
-    color = if (color == Color.Unspecified) Color.Transparent else color,
-    tonalElevation = if (tonalElevation == Dp.Unspecified) 0.dp else tonalElevation,
-    modifier = modifier.fillMaxSize(),
-  ) {
-    CompositionLocalProvider(LocalAbsoluteTonalElevation provides 0.dp) {
-      content()
+    Surface(
+        color = if (color == Color.Unspecified) Color.Transparent else color,
+        tonalElevation = if (tonalElevation == Dp.Unspecified) 0.dp else tonalElevation,
+        modifier = modifier.fillMaxSize()
+    ) {
+        CompositionLocalProvider(LocalAbsoluteTonalElevation provides 0.dp) {
+            content()
+        }
     }
-  }
 }

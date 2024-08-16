@@ -31,23 +31,23 @@ class UsersViewModel(
     fun fetchUsers() {
         if (_isLoading.value) return // Prevent multiple requests at once
         _isLoading.value = true
-       CoroutineScope(dispatcher).launch {
-           getUsersUseCase.execute(currentPage)
-               .onCompletion {
-                   _isLoading.value = false
-               }
-               .catch {
-                   _isLoading.value = false
-                   logger.e(it.message.orEmpty(), it)
-                   handleException(it)
-               }
-               .collect { newUsers ->
-                   if (newUsers.isEmpty()) return@collect
-                   _users.value += newUsers
-                   currentPage++
-                   _isLoading.value = false
-               }
-       }
+        CoroutineScope(dispatcher).launch {
+            getUsersUseCase.execute(currentPage)
+                .onCompletion {
+                    _isLoading.value = false
+                }
+                .catch {
+                    _isLoading.value = false
+                    logger.e(it.message.orEmpty(), it)
+                    handleException(it)
+                }
+                .collect { newUsers ->
+                    if (newUsers.isEmpty()) return@collect
+                    _users.value += newUsers
+                    currentPage++
+                    _isLoading.value = false
+                }
+        }
     }
 
     private fun handleException(exception: Throwable) {

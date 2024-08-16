@@ -1,4 +1,4 @@
-package co.touchlab.kampkit.android.ui.core_ui
+package co.touchlab.kampkit.android.ui.coreUI
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,11 +10,11 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun LoadingIndicator(modifier: Modifier = Modifier) {
-  Column(
-    modifier = modifier.fillMaxSize(),
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally,
-  ) {
-    CircularProgressIndicator()
-  }
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        CircularProgressIndicator()
+    }
 }

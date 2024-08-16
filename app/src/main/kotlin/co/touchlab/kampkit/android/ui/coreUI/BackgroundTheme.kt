@@ -1,4 +1,4 @@
-package co.touchlab.kampkit.android.ui.core_ui
+package co.touchlab.kampkit.android.ui.coreUI
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Immutable
@@ -10,7 +10,10 @@ import androidx.compose.ui.unit.Dp
  * A class to model background color and tonal elevation values for App.
  */
 @Immutable
-data class BackgroundTheme(val color: Color = Color.Unspecified, val tonalElevation: Dp = Dp.Unspecified)
+data class BackgroundTheme(
+    val color: Color = Color.Unspecified,
+    val tonalElevation: Dp = Dp.Unspecified
+)
 
 /**
  * A composition local for [BackgroundTheme].

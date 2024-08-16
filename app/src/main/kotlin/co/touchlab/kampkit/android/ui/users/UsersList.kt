@@ -16,107 +16,108 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import co.touchlab.kampkit.android.ui.core_ui.LoadingIndicator
-import co.touchlab.kampkit.android.ui.core_ui.RetryButton
+import co.touchlab.kampkit.android.ui.coreUI.LoadingIndicator
+import co.touchlab.kampkit.android.ui.coreUI.RetryButton
 import co.touchlab.kampkit.domain.model.User
 import co.touchlab.kermit.Logger
 import com.hoc081098.flowext.ThrottleConfiguration
 import com.hoc081098.flowext.throttleTime
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.filter
-import kotlin.time.Duration.Companion.milliseconds
 
-private const val UserItemsListLogTag = "UserItemsList"
+private const val LOG_TAG = "UserItemsList"
 
 @Composable
 internal fun UsersList(
-  items: ImmutableList<User>,
-  isLoading: Boolean,
-  error: Throwable?,
-  hasReachedMax: Boolean,
-  onRetry: () -> Unit,
-  onLoadNextPage: () -> Unit,
-  onItemClick: (User) -> Unit,
-  modifier: Modifier = Modifier,
-  lazyListState: LazyListState = rememberLazyListState()
+    items: ImmutableList<User>,
+    isLoading: Boolean,
+    error: Throwable?,
+    hasReachedMax: Boolean,
+    onRetry: () -> Unit,
+    onLoadNextPage: () -> Unit,
+    onItemClick: (User) -> Unit,
+    modifier: Modifier = Modifier,
+    lazyListState: LazyListState = rememberLazyListState()
 ) {
-  val currentOnLoadNextPage by rememberUpdatedState(onLoadNextPage)
-  val currentHasReachedMax by rememberUpdatedState(hasReachedMax)
+    val currentOnLoadNextPage by rememberUpdatedState(onLoadNextPage)
+    val currentHasReachedMax by rememberUpdatedState(hasReachedMax)
 
-  LaunchedEffect(lazyListState) {
-    snapshotFlow { lazyListState.layoutInfo }
-      .throttleTime(
-        duration = 300.milliseconds,
-        throttleConfiguration = ThrottleConfiguration.LEADING_AND_TRAILING,
-      )
-      .filter {
-        val index = it.visibleItemsInfo.lastOrNull()?.index
-        val totalItemsCount = it.totalItemsCount
+    LaunchedEffect(lazyListState) {
+        snapshotFlow { lazyListState.layoutInfo }
+            .throttleTime(
+                duration = 300.milliseconds,
+                throttleConfiguration = ThrottleConfiguration.LEADING_AND_TRAILING
+            )
+            .filter {
+                val index = it.visibleItemsInfo.lastOrNull()?.index
+                val totalItemsCount = it.totalItemsCount
 
-        Logger.d(
-          messageString = "lazyListState: currentHasReachedMax=$currentHasReachedMax " +
-            "- lastVisible=$index" +
-            " - totalItemsCount=$totalItemsCount",
-          tag = UserItemsListLogTag,
-        )
+                Logger.d(
+                    messageString = "lazyListState: currentHasReachedMax=$currentHasReachedMax " +
+                        "- lastVisible=$index" +
+                        " - totalItemsCount=$totalItemsCount",
+                    tag = LOG_TAG
+                )
 
-        !currentHasReachedMax && index != null &&
-          index + 2 >= totalItemsCount
-      }
-      .collect {
-        Logger.d(
-          messageString = "load next page",
-          tag = UserItemsListLogTag,
-        )
-        currentOnLoadNextPage()
-      }
-  }
-
-  LazyColumn(
-    modifier = modifier
-      .padding(horizontal = 16.dp),
-    verticalArrangement = Arrangement.spacedBy(16.dp),
-    state = lazyListState,
-  ) {
-    items(
-      items = items,
-      key = { it.login },
-      contentType = { "user-row" },
-    ) { item ->
-      UserRow(
-        modifier = Modifier
-          .clickable {
-            onItemClick(item)
-          }
-          .fillParentMaxWidth(),
-        item = item,
-      )
+                !currentHasReachedMax &&
+                    index != null &&
+                    index + 2 >= totalItemsCount
+            }
+            .collect {
+                Logger.d(
+                    messageString = "load next page",
+                    tag = LOG_TAG
+                )
+                currentOnLoadNextPage()
+            }
     }
 
-    when {
-      isLoading -> {
-        item(contentType = "LoadingIndicator") {
-          LoadingIndicator(
-            modifier = Modifier.height(128.dp),
-          )
+    LazyColumn(
+        modifier = modifier
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        state = lazyListState
+    ) {
+        items(
+            items = items,
+            key = { it.login },
+            contentType = { "user-row" }
+        ) { item ->
+            UserRow(
+                modifier = Modifier
+                    .clickable {
+                        onItemClick(item)
+                    }
+                    .fillParentMaxWidth(),
+                item = item
+            )
         }
-      }
 
-      error !== null -> {
-        item(contentType = "RetryButton") {
-          RetryButton(
-            modifier = Modifier.height(128.dp),
-            errorMessage = error.message.orEmpty(),
-            onRetry = onRetry,
-          )
-        }
-      }
+        when {
+            isLoading -> {
+                item(contentType = "LoadingIndicator") {
+                    LoadingIndicator(
+                        modifier = Modifier.height(128.dp)
+                    )
+                }
+            }
 
-      !hasReachedMax -> {
-        item(contentType = "Spacer") {
-          Spacer(modifier = Modifier.height(128.dp))
+            error !== null -> {
+                item(contentType = "RetryButton") {
+                    RetryButton(
+                        modifier = Modifier.height(128.dp),
+                        errorMessage = error.message.orEmpty(),
+                        onRetry = onRetry
+                    )
+                }
+            }
+
+            !hasReachedMax -> {
+                item(contentType = "Spacer") {
+                    Spacer(modifier = Modifier.height(128.dp))
+                }
+            }
         }
-      }
     }
-  }
 }

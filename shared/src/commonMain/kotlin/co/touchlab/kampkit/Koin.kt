@@ -89,7 +89,7 @@ private val coreModule = module {
             get(),
             get(),
             Dispatchers.Default,
-            getWith("UserRepository"),
+            getWith("UserRepository")
         )
     }
 
@@ -106,9 +106,9 @@ private val coreModule = module {
     }
 }
 
-internal inline fun <reified T> Scope.getWith(vararg params: Any?): T {
-    return get(parameters = { parametersOf(*params) })
-}
+internal inline fun <reified T> Scope.getWith(vararg params: Any?): T = get(parameters = {
+    parametersOf(*params)
+})
 
 // Simple function to clean up the syntax a bit
 fun KoinComponent.injectLogger(tag: String): Lazy<Logger> = inject { parametersOf(tag) }

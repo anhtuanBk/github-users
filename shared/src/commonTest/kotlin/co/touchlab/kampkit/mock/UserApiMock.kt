@@ -10,7 +10,7 @@ class UserApiMock : UserApi {
     var getUsersCalledCount = 0
         private set
     var getUserDetailsCalledCount = 0
-        private  set
+        private set
 
     override suspend fun getUsers(page: Int, perPage: Int): List<User> {
         val result = nextUsersResult()

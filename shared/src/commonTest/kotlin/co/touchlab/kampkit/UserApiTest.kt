@@ -17,11 +17,11 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.Url
 import io.ktor.http.headersOf
-import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.Json
 
 class UserApiTest {
     private val emptyLogger = Logger(
@@ -55,7 +55,7 @@ class UserApiTest {
     "type": "User",
     "site_admin": false
   }]
-                """.trimIndent()
+        """.trimIndent()
 
         val mockUsers = listOf(
             User(
@@ -131,7 +131,7 @@ class UserApiTest {
                       "created_at": "2007-10-20T05:24:19Z",
                       "updated_at": "2024-07-14T20:45:58Z"
                     }
-                """.trimIndent()
+        """.trimIndent()
 
         val mockUserDetails = UserDetails(
             "mojombo",

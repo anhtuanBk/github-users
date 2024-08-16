@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,63 +31,60 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 
 @Composable
-internal fun UserRow(
-  item: User,
-  modifier: Modifier = Modifier,
-) {
-  val context = LocalContext.current
+internal fun UserRow(item: User, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
 
-  Card(
-    modifier = modifier,
-    elevation = CardDefaults.elevatedCardElevation(
-      defaultElevation = 3.dp,
-    ),
-    shape = RoundedCornerShape(size = 20.dp),
-  ) {
-    Row(
-      modifier = Modifier.padding(8.dp),
-      verticalAlignment = Alignment.CenterVertically,
+    Card(
+        modifier = modifier,
+        elevation = CardDefaults.elevatedCardElevation(
+            defaultElevation = 3.dp
+        ),
+        shape = RoundedCornerShape(size = 20.dp)
     ) {
-      AsyncImage(
-        modifier = Modifier
-          .size(92.dp)
-          .clip(RoundedCornerShape(size = 20.dp))
-          .background(Color.White),
-        model = remember(context, item.avatarUrl) {
-          ImageRequest.Builder(context)
-            .data(item.avatarUrl)
-            .crossfade(true)
-            .build()
-        },
-        placeholder = painterResource(R.drawable.icons8_github_96),
-        contentDescription = "Avatar",
-        contentScale = ContentScale.FillBounds,
-      )
+        Row(
+            modifier = Modifier.padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AsyncImage(
+                modifier = Modifier
+                    .size(92.dp)
+                    .clip(RoundedCornerShape(size = 20.dp))
+                    .background(Color.White),
+                model = remember(context, item.avatarUrl) {
+                    ImageRequest.Builder(context)
+                        .data(item.avatarUrl)
+                        .crossfade(true)
+                        .build()
+                },
+                placeholder = painterResource(R.drawable.icons8_github_96),
+                contentDescription = "Avatar",
+                contentScale = ContentScale.FillBounds
+            )
 
-      Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(8.dp))
 
-      Column(
-        modifier = Modifier.weight(1f),
-        verticalArrangement = Arrangement.Center,
-      ) {
-        Text(
-          item.login,
-          maxLines = 2,
-          overflow = TextOverflow.Ellipsis,
-          style = MaterialTheme.typography.titleMedium,
-        )
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    item.login,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.titleMedium
+                )
 
-        Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-        Text(
-          item.htmlUrl,
-          maxLines = 2,
-          overflow = TextOverflow.Ellipsis,
-          style = MaterialTheme.typography.bodySmall,
-        )
+                Text(
+                    item.htmlUrl,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodySmall
+                )
 
-        Spacer(modifier = Modifier.height(8.dp))
-      }
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+        }
     }
-  }
 }

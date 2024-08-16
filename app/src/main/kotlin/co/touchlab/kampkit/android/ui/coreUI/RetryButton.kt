@@ -1,4 +1,4 @@
-package co.touchlab.kampkit.android.ui.core_ui
+package co.touchlab.kampkit.android.ui.coreUI
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,31 +21,31 @@ import co.touchlab.kampkit.android.R
 
 @Composable
 fun RetryButton(errorMessage: String, onRetry: () -> Unit, modifier: Modifier = Modifier) {
-  Column(
-    modifier = modifier
-      .fillMaxSize()
-      .padding(8.dp),
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally,
-  ) {
-    Text(
-      text = errorMessage,
-      maxLines = 2,
-      overflow = TextOverflow.Ellipsis,
-      textAlign = TextAlign.Center,
-    )
-
-    Spacer(modifier = Modifier.height(8.dp))
-
-    Button(
-      onClick = onRetry,
-      contentPadding = PaddingValues(
-        vertical = 12.dp,
-        horizontal = 24.dp,
-      ),
-      shape = RoundedCornerShape(6.dp),
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(8.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      Text(text = stringResource(R.string.retry))
+        Text(
+            text = errorMessage,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = onRetry,
+            contentPadding = PaddingValues(
+                vertical = 12.dp,
+                horizontal = 24.dp
+            ),
+            shape = RoundedCornerShape(6.dp)
+        ) {
+            Text(text = stringResource(R.string.retry))
+        }
     }
-  }
 }

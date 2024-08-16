@@ -10,14 +10,14 @@ import co.touchlab.kampkit.mock.UserApiMock
 import co.touchlab.kampkit.presentation.UsersViewModel
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.StaticConfig
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 
 class UsersViewModelTest {
     private var kermit = Logger(StaticConfig())
@@ -58,12 +58,12 @@ class UsersViewModelTest {
         co.touchlab.kampkit.domain.model.User(
             "aaaa",
             "mkdc.com",
-            "ikdkc.asa",
+            "ikdkc.asa"
         ),
         co.touchlab.kampkit.domain.model.User(
             "dsddd",
             "mksddc.com",
-            "ikwewdkc.asa",
+            "ikwewdkc.asa"
         )
     )
 
@@ -71,12 +71,12 @@ class UsersViewModelTest {
         co.touchlab.kampkit.domain.model.User(
             "aaaaa",
             "mkdc.com",
-            "ikdkc.asa",
+            "ikdkc.asa"
         ),
         co.touchlab.kampkit.domain.model.User(
             "dsdddd",
             "mksddc.com",
-            "ikwewdkc.asa",
+            "ikwewdkc.asa"
         )
     )
 
@@ -150,9 +150,7 @@ class UsersViewModelTest {
 
 // There's a race condition where intermediate states can get missed if the next state comes too fast.
 // This function addresses that by awaiting an item that may or may not be preceded by the specified other items
-private suspend fun <T> ReceiveTurbine<T>.awaitItemPrecededBy(
-    vararg items: T
-): T {
+private suspend fun <T> ReceiveTurbine<T>.awaitItemPrecededBy(vararg items: T): T {
     var nextItem = awaitItem()
     for (item in items) {
         if (item == nextItem) {

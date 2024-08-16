@@ -21,55 +21,57 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 
 fun createJson(): Json = Json {
-  serializersModule = SerializersModule {
-    contextual(Instant::class, InstantSerializer)
-  }
-  ignoreUnknownKeys = true
-  coerceInputValues = true
-  prettyPrint = true
-  isLenient = true
-  encodeDefaults = true
-  allowSpecialFloatingPointValues = true
-  allowStructuredMapKeys = true
-  useArrayPolymorphism = false
+    serializersModule = SerializersModule {
+        contextual(Instant::class, InstantSerializer)
+    }
+    ignoreUnknownKeys = true
+    coerceInputValues = true
+    prettyPrint = true
+    isLenient = true
+    encodeDefaults = true
+    allowSpecialFloatingPointValues = true
+    allowStructuredMapKeys = true
+    useArrayPolymorphism = false
 }
 
 fun createHttpClient(
-  engine: HttpClientEngine,
-  json: Json,
-  log: co.touchlab.kermit.Logger,
+    engine: HttpClientEngine,
+    json: Json,
+    log: co.touchlab.kermit.Logger
 ): HttpClient = HttpClient(engine) {
-  expectSuccess = true
-  install(HttpTimeout) {
-    requestTimeoutMillis = 10000
-    connectTimeoutMillis = 10000
-    socketTimeoutMillis = 10000
-  }
-
-  install(ContentNegotiation) {
-    json(json)
-    register(
-      ContentType.Text.Plain,
-      KotlinxSerializationConverter(json),
-    )
-  }
-
-  install(Logging) {
-    level = LogLevel.ALL
-    logger = object : Logger {
-      override fun log(message: String) {
-        log.d(message)
-      }
+    expectSuccess = true
+    install(HttpTimeout) {
+        requestTimeoutMillis = 10000
+        connectTimeoutMillis = 10000
+        socketTimeoutMillis = 10000
     }
-  }
+
+    install(ContentNegotiation) {
+        json(json)
+        register(
+            ContentType.Text.Plain,
+            KotlinxSerializationConverter(json)
+        )
+    }
+
+    install(Logging) {
+        level = LogLevel.ALL
+        logger = object : Logger {
+            override fun log(message: String) {
+                log.d(message)
+            }
+        }
+    }
 }
 
 internal object InstantSerializer : KSerializer<Instant> {
-  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(
-    "InstantSerializer",
-    PrimitiveKind.STRING,
-  )
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(
+        "InstantSerializer",
+        PrimitiveKind.STRING
+    )
 
-  override fun serialize(encoder: Encoder, value: Instant) = encoder.encodeString(value.toString())
-  override fun deserialize(decoder: Decoder): Instant = Instant.parse(decoder.decodeString())
+    override fun serialize(encoder: Encoder, value: Instant) =
+        encoder.encodeString(value.toString())
+
+    override fun deserialize(decoder: Decoder): Instant = Instant.parse(decoder.decodeString())
 }

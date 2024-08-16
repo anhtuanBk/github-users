@@ -10,16 +10,16 @@ import co.touchlab.kampkit.mock.UserApiMock
 import co.touchlab.kampkit.presentation.UserDetailsViewModel
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.StaticConfig
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class UserDetailsViewModelTest {
     private var kermit = Logger(StaticConfig())
@@ -119,9 +119,7 @@ class UserDetailsViewModelTest {
     }
 }
 
-private suspend fun <T> ReceiveTurbine<T>.awaitItemPrecededBy(
-    vararg items: T
-): T {
+private suspend fun <T> ReceiveTurbine<T>.awaitItemPrecededBy(vararg items: T): T {
     var nextItem = awaitItem()
     for (item in items) {
         if (item == nextItem) {

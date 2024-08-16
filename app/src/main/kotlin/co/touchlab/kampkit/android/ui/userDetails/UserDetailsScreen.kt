@@ -1,4 +1,4 @@
-package co.touchlab.kampkit.android.ui.user_details
+package co.touchlab.kampkit.android.ui.userDetails
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
@@ -51,11 +51,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserDetailsScreen(
-    viewModel: UserDetailsViewModel,
-    login: String,
-    onBack: () -> Unit
-) {
+fun UserDetailsScreen(viewModel: UserDetailsViewModel, login: String, onBack: () -> Unit) {
     val userDetails by viewModel.userDetails.collectAsStateWithLifecycle()
     val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
@@ -76,105 +72,105 @@ fun UserDetailsScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
                 }
             )
-        },
+        }
     ) { innerPadding ->
-            Column(
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
+        ) {
+            Card(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                elevation = CardDefaults.elevatedCardElevation(
+                    defaultElevation = 3.dp
+                ),
+                shape = RoundedCornerShape(size = 20.dp)
             ) {
-                Card(
+                Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                    elevation = CardDefaults.elevatedCardElevation(
-                        defaultElevation = 3.dp,
-                    ),
-                    shape = RoundedCornerShape(size = 20.dp),
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
+                    AsyncImage(
                         modifier = Modifier
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        AsyncImage(
-                            modifier = Modifier
-                                .size(64.dp)
-                                .clip(CircleShape)
-                                .border(1.dp, Color.Gray, CircleShape),
-                            model = remember(context, userDetails?.avatarUrl) {
-                                ImageRequest.Builder(context)
-                                    .data(userDetails?.avatarUrl)
-                                    .crossfade(true)
-                                    .build()
-                            },
-                            placeholder = painterResource(R.drawable.icons8_github_96),
-                            contentDescription = "Avatar",
-                            contentScale = ContentScale.FillBounds,
+                            .size(64.dp)
+                            .clip(CircleShape)
+                            .border(1.dp, Color.Gray, CircleShape),
+                        model = remember(context, userDetails?.avatarUrl) {
+                            ImageRequest.Builder(context)
+                                .data(userDetails?.avatarUrl)
+                                .crossfade(true)
+                                .build()
+                        },
+                        placeholder = painterResource(R.drawable.icons8_github_96),
+                        contentDescription = "Avatar",
+                        contentScale = ContentScale.FillBounds
+                    )
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    Column {
+                        Text(
+                            text = userDetails?.login ?: "",
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold
                         )
-
-                        Spacer(modifier = Modifier.width(16.dp))
-
-                        Column {
-                            Text(
-                                text = userDetails?.login ?: "",
-                                style = MaterialTheme.typography.headlineMedium,
-                                fontWeight = FontWeight.Bold
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.LocationOn,
+                                contentDescription = "Location",
+                                tint = Color.Gray
                             )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.LocationOn,
-                                    contentDescription = "Location",
-                                    tint = Color.Gray
-                                )
-                                Spacer(modifier = Modifier.width(4.dp))
-                                Text(
-                                    text = userDetails?.location ?: "",
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = userDetails?.location ?: "",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
                         }
                     }
                 }
+            }
 
-                Row(
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    StatCard(
-                        icon = Icons.Default.Person,
-                        number = userDetails?.followers ?: 0,
-                        label = "Follower"
-                    )
-                    StatCard(
-                        icon = Icons.Default.Person,
-                        number = userDetails?.following ?: 0,
-                        label = "Following"
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = "Blog",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 8.dp)
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                StatCard(
+                    icon = Icons.Default.Person,
+                    number = userDetails?.followers ?: 0,
+                    label = "Follower"
                 )
-
-                Text(
-                    text = userDetails?.htmlUrl ?: "",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Blue,
+                StatCard(
+                    icon = Icons.Default.Person,
+                    number = userDetails?.following ?: 0,
+                    label = "Following"
                 )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "Blog",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            Text(
+                text = userDetails?.htmlUrl ?: "",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Blue
+            )
         }
     }
 }

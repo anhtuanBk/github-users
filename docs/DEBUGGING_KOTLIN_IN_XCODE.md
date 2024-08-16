@@ -1,6 +1,7 @@
 # Debugging Kotlin in Xcode
 
-> Note that if there is a [known issue](https://github.com/touchlab/xcode-kotlin/issues/95) with `xcode-kotlin` plugin on Xcode 15
+> Note that if there is a [known issue](https://github.com/touchlab/xcode-kotlin/issues/95)
+> with `xcode-kotlin` plugin on Xcode 15
 
 By this point you should be able to build and run KaMP Kit in iOS using Xcode. Great! Maybe you've
 changed a variable and want to see if it actually updated successfully, but how do you do that? Well
@@ -10,8 +11,10 @@ we at Touchlab have actually created a way to **debug kotlin code in Xcode**.
 
 The [Kotlin Native Xcode Plugin](https://github.com/touchlab/xcode-kotlin) adds basic highlighting,
 allows you to set breakpoints and includes llvm support to view data in the debug window. You can
-find the steps to install this plugin on its readMe. Newly a CLI (command line interface) was added -
-it is an executable that is installed on your machine and manages the plugin installation(s). It allows:
+find the steps to install this plugin on its readMe. Newly a CLI (command line interface) was
+added -
+it is an executable that is installed on your machine and manages the plugin installation(s). It
+allows:
 
 - Homebrew installation
 - Better Xcode integration (No more "Load Bundle" popups!)
@@ -28,10 +31,12 @@ will allow you to add breakpoints and edit kotlin without switching to Android S
 won't want to do your primary kotlin coding like this, but it's helpful when debugging.
 
 To add the Kotlin source:
+
 1. Right click in the project explorer
 
 ![](Screenshots/AddFiles.png)
 
-2. In the finder opened, select the kotlin source you want included (commonMain and iosMain). Be sure to select "Create folder references for any added folders"
+2. In the finder opened, select the kotlin source you want included (commonMain and iosMain). Be
+   sure to select "Create folder references for any added folders"
 
 ![](Screenshots/FolderRef.png)

@@ -1,4 +1,4 @@
-package co.touchlab.kampkit.android.ui.user_details
+package co.touchlab.kampkit.android.ui.userDetails
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
